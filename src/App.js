@@ -1,8 +1,8 @@
 import './App.css';
 import Header from "./MyComponents/Header";
-import { Todos } from "./MyComponents/Todos";
+import { Todos } from "./MyComponents/Todos.tsx";
 import { Footer } from "./MyComponents/Footer";
-import { AddTodo } from "./MyComponents/AddTodo";
+import { AddTodo } from "./MyComponents/AddTodo.tsx";
 import { About } from "./MyComponents/About";
 import React, { useState, useEffect } from 'react';
 import {
@@ -83,7 +83,7 @@ function App() {
             <About />
           </Route>  */}
         </Routes> 
-      <Footer />
+      
     </Router>
     </>
   );
