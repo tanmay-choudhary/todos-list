@@ -12,15 +12,75 @@ import {
 } from "react-router-dom";
 
 function App() {
-  let initTodo;
+  let initTodo ;
+  let testData = [
+    {
+      sno: "111",
+      title: "title",
+      desc: "desc",
+      tags: ["tags"],
+      status: "status",
+      date: "date",
+      date2: "date2",
+    },
+  ];
   if (localStorage.getItem("todos") === null) {
-    initTodo = [];
+    initTodo = [
+      {
+        sno: "111",
+        title: "title",
+        desc: "desc",
+        tags: ["tags"],
+        status: "status",
+        date: "date",
+        date2: "date2",
+      },
+      {
+        sno: "113",
+        title: "title",
+        desc: "desc",
+        tags: ["tags"],
+        status: "status",
+        date: "date",
+        date2: "date2",
+      },
+      {
+        sno: "114",
+        title: "title",
+        desc: "desc",
+        tags: ["tags"],
+        status: "status",
+        date: "date",
+        date2: "date2",
+      },
+      {
+        sno: "115",
+        title: "title",
+        desc: "desc",
+        tags: ["tags"],
+        status: "status",
+        date: "date",
+        date2: "date2",
+      },
+      {
+        sno: "116",
+        title: "title",
+        desc: "desc",
+        tags: ["tags"],
+        status: "status",
+        date: "date",
+        date2: "date2",
+      },
+    ];
   }
   else {
     initTodo = JSON.parse(localStorage.getItem("todos"));
+    initTodo = [...initTodo,...testData];
   }
 
-
+  const onEdit = () =>{
+    
+  }
   const onDelete = (todo) => {
     console.log("I am ondelete of todo", todo);
     // Deleting this way in react does not work
@@ -34,42 +94,58 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  const addTodo = (title, desc) => {
-    console.log("I am adding this todo", title, desc)
+  const addTodo = (title, desc, tags, status, date, date2) => {
+    console.log(
+      "I am adding this todo",
+      title,
+      desc,
+      tags,
+      status,
+      date,
+      date2
+    );
     let sno;
     if (todos.length === 0) {
       sno = 0;
-    }
-    else {
+    } else {
       sno = todos[todos.length - 1].sno + 1;
     }
     const myTodo = {
       sno: sno,
       title: title,
       desc: desc,
-    }
+      tags:tags,
+      status:status,
+      date:date,
+      date2:date2
+    };
     setTodos([...todos, myTodo]);
     console.log(myTodo);
-  }
+  };
 
   const [todos, setTodos] = useState(initTodo);
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos])
 
-  return ( 
-    <> 
-    <Router>
-      <Header title="My Todos List" searchBar={false} /> 
-      {/* <AddTodo addTodo={addTodo} />
+  return (
+    <>
+      <Router>
+        <Header title="My Todos List" searchBar={false} />
+        {/* <AddTodo addTodo={addTodo} />
       <Todos todos={todos} onDelete={onDelete} />  */}
-      <Routes>
-      <Route path='/' element={ <>
-            <AddTodo addTodo={addTodo} />
-            <Todos todos={todos} onDelete={onDelete} /> 
-            </>} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <AddTodo addTodo={addTodo} />
+                <Todos todos={todos} onDelete={onDelete} onEdit={onEdit} />
+              </>
+            }
+          />
 
-      <Route path='/about' element={<About/>} />
+          <Route path="/about" element={<About />} />
 
           {/* <Route exact path="/" render={()=>{
             return(
@@ -82,9 +158,8 @@ function App() {
           <Route exact path="/about">
             <About />
           </Route>  */}
-        </Routes> 
-      
-    </Router>
+        </Routes>
+      </Router>
     </>
   );
 }

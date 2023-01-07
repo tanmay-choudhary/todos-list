@@ -7,19 +7,21 @@ export const AddTodo = ({ addTodo }) => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState("");
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
 
   const submit = (e) => {
+    //console.log("I am in submit  = ", title, desc, tags ,status , date);
     e.preventDefault();
     if (!title || !desc) {
       alert("Title or Description cannot be blank");
     } else {
-      addTodo(title, desc);
+      addTodo(title, desc, tags,status,date,new Date());
       setTitle("");
       setDesc("");
     }
+    // return false;
   };
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
@@ -88,21 +90,34 @@ export const AddTodo = ({ addTodo }) => {
             Add Todo
           </button>
         </form> */}
-      <Form onFinish={submit}>
+      <Form>
         <Form.Item name={"title"} label={"Title"}>
-          <Input placeholder="Enter Title" />
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter Title"
+          />
         </Form.Item>
         <Form.Item name={"desc"} label={"Desc"}>
-          <Input placeholder="Description" />
+          <Input
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            placeholder="Description"
+          />
         </Form.Item>
         <Form.Item name={"date"} label={"Date"}>
-          <Input type="date" placeholder="Enter Due Date" />
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            placeholder="Enter Due Date"
+          />
         </Form.Item>
         <Form.Item name={"status"} label={"Status"}>
           <Select
             defaultValue="-"
             style={{ width: 120 }}
-            onChange={handleChange}
+            value={status}
             options={[
               {
                 value: "Open",
@@ -113,23 +128,24 @@ export const AddTodo = ({ addTodo }) => {
                 label: "Closed",
               },
             ]}
+            onChange={(e) => setStatus(e)}
           />
         </Form.Item>
         <Form.Item name={"tag"} label={"Tag"}>
-            <Input
-              // type="text"
-              placeholder="Enter Tag"
-              value={tag}
-              onChange={(e)=>setTag(e.target.value)}
-              onKeyUp={(event) =>
-                event.key === "Enter" ? addTags(event) : null
-              }
-            />
-            {tags.map((item)=>{
-              return <Tag closable>{item}</Tag>
-            })}
+          <Input
+            // type="text"
+            placeholder="Enter Tag"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            onKeyUp={(event) => (event.key === "Enter" ? addTags(event) : null)}
+          />
+          {tags.map((item) => {
+            return <Tag closable>{item}</Tag>;
+          })}
         </Form.Item>
-        <Button htmlType="submit" type="primary">Add</Button>
+        <Button type="primary" onClick={submit}>
+          Add
+        </Button>
       </Form>
     </div>
   );
