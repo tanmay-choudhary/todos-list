@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { Space, Table, Tag, Form, Input, Checkbox ,Button} from "antd";
+import { Space, Table, Tag, Form, Input, Checkbox, Button } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Select } from "antd";
 
-export const AddTodo = ({ addTodo }) => {
+export const AddTodo = (props) => {
+  // let titleData = "";
+  // let descData = "";
+  // if(props.isEdit){
+  //   titleData = props.editing.title;
+  //   descData = props.editing.desc;
+  // }
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
@@ -14,28 +20,54 @@ export const AddTodo = ({ addTodo }) => {
   const submit = (e) => {
     //console.log("I am in submit  = ", title, desc, tags ,status , date);
     e.preventDefault();
-    if (!title || !desc) {
+    if (!title || !desc || !status) {
       alert("Title or Description cannot be blank");
+    }else if(title.length>100 || desc.length>100){
+      alert("Title or Description length should be less then 100");
     } else {
-      addTodo(title, desc, tags,status,date,new Date());
+      if (!props.isEdit) {
+        console.log("inside Addd");
+        props.addTodo(title, desc, tags, status, date, new Date().toString());
+      } else {
+        console.log("inside Edittt");
+        props.editTodo(
+          props.editing.sno,
+          title,
+          desc,
+          tags,
+          status,
+          date,
+          new Date().toString()
+        );
+      }
       setTitle("");
       setDesc("");
+      setDate("");
+      setStatus("");
+      setTag("");
+      setTags([]);
     }
     // return false;
   };
+  if (props.editing) {
+    //setTags(props.editing.tags);
+    console.log("edit mode", props.editing.title);
+  } else {
+    console.log("Add mode");
+  }
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
-  const addTags = (e) =>{
-    console.log("inside add tags")
+  const addTags = (e) => {
+    console.log("inside add tags");
     setTag("");
-    setTags(()=>{
-      return [...tags,e.target.value];
-    })
-  }
+    setTags(() => {
+      return [...tags, e.target.value];
+    });
+  };
   return (
     <div className="container my-3">
-      <h3>Add a Todo</h3>
+      {props.isEdit ? <h3>Edit a Todo</h3> : <h3>Add a Todo</h3>}
       {/* <form onSubmit={submit}>
           <div className="mb-3">
             <label htmlFor="title" className="form-label">
@@ -94,34 +126,46 @@ export const AddTodo = ({ addTodo }) => {
         <Form.Item name={"title"} label={"Title"}>
           <Input
             value={title}
+            //  defaultValue={props.isEdit ? props.editing.title : ""}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter Title"
+            placeholder={props.isEdit ? props.editing.title : "Enter Title"}
           />
         </Form.Item>
         <Form.Item name={"desc"} label={"Desc"}>
           <Input
             value={desc}
+            //defaultValue={props.isEdit ? props.editing.desc : ""}
             onChange={(e) => setDesc(e.target.value)}
-            placeholder="Description"
+            placeholder={props.isEdit ? props.editing.desc : "Description"}
           />
         </Form.Item>
         <Form.Item name={"date"} label={"Date"}>
           <Input
             type="date"
             value={date}
+            //defaultValue={props.isEdit ? props.editing.date : "-"}
             onChange={(e) => setDate(e.target.value)}
-            placeholder="Enter Due Date"
+            placeholder={props.isEdit ? props.editing.date : "Enter Due Date"}
           />
         </Form.Item>
         <Form.Item name={"status"} label={"Status"}>
           <Select
-            defaultValue="-"
+            //defaultValue={props.isEdit ? props.editing.status : "-"}
+            placeholder={props.isEdit ? props.editing.status : "Enter Status"}
             style={{ width: 120 }}
             value={status}
             options={[
               {
                 value: "Open",
                 label: "Open",
+              },
+              {
+                value: "Working",
+                label: "Working",
+              },
+              {
+                value: "Overdue",
+                label: "Overdue",
               },
               {
                 value: "Closed",
@@ -139,12 +183,15 @@ export const AddTodo = ({ addTodo }) => {
             onChange={(e) => setTag(e.target.value)}
             onKeyUp={(event) => (event.key === "Enter" ? addTags(event) : null)}
           />
+          {/* { props.editing?.tags?.map((item)=>{
+            return <Tag closable>{item}</Tag>;
+          })} */}
           {tags.map((item) => {
             return <Tag closable>{item}</Tag>;
           })}
         </Form.Item>
         <Button type="primary" onClick={submit}>
-          Add
+          {!props.isEdit ? "Add" : "Edit"}
         </Button>
       </Form>
     </div>

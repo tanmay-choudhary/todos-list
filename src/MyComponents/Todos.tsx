@@ -1,25 +1,79 @@
 import React from 'react'
 import {TodoItem} from "./TodoItem";
-import { Space, Table, Tag ,Modal} from "antd";
+import { Button, Input, Space, Table, Tag, Modal } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 export const Todos = (props) => {
      interface DataType {
-       key: string;
-       name: string;
-       age: number;
-       address: string;
+       sno: string;
+       title: string;
+       desc: string;
+       date: string;
+       date2: string;
        tags: string[];
-       onClick : object;
+       status:string;
+       onClick: object;
      }
-     console.log(props.todos, " inside TodosTsx");
+    console.log(props.todos, " inside TodosTsx");
      const columns: ColumnsType<DataType> = [
        {
          title: "title",
          dataIndex: "title",
          key: "title",
          render: (title) => <a>{title}</a>,
+         filterDropdown: ({
+           setSelectedKeys,
+           selectedKeys,
+           confirm,
+           clearFilters,
+         }) => {
+           return (
+             <>
+               <Input
+                 autoFocus
+                 placeholder="Type text here"
+                 value={selectedKeys[0]}
+                 onChange={(e) => {
+                   setSelectedKeys(e.target.value ? [e.target.value] : []);
+                   confirm({ closeDropdown: false });
+                 }}
+                 onPressEnter={() => {
+                   confirm();
+                 }}
+                 onBlur={() => {
+                   confirm();
+                 }}
+               ></Input>
+               <Button
+                 onClick={() => {
+                   confirm();
+                 }}
+                 type="primary"
+               >
+                 Search
+               </Button>
+               <Button
+                 onClick={() => {
+                   clearFilters();
+                 }}
+                 type="danger"
+               >
+                 Reset
+               </Button>
+             </>
+           );
+         },
+         filterIcon: () => {
+           return <SearchOutlined />;
+         },
+         onFilter: (value, record) => {
+           return record.name.toLowerCase().includes(value.toLowerCase());
+         },
        },
        {
          title: "desc",
@@ -50,46 +104,57 @@ export const Todos = (props) => {
          title: "Created On",
          dataIndex: "date2",
          key: "date2",
+         sorter: (record1, record2) => {
+           return record1.date2 > record2.date2;
+         },
        },
        {
          title: "Deadline",
          dataIndex: "date",
          key: "date",
+         sorter: (record1, record2) => {
+           return record1.date > record2.date;
+         },
        },
-      //  {
-      //    title: "Action",
-      //    key: "action",
-      //    dataIndex: "sno",
-      //    render: (_: any, record,onDelete) => (
-      //      <Space size="middle">
-      //        <a>Edit {record.name} </a>
-      //        <a>Delete {onDelete}</a>
-             
-      //         {/* <button onClick={onDelete}>Delete</button>  */}
-      //      </Space>
-      //    ),
-      //  },
-      {
-      key: "5",
-      title: "Actions",
-      render: (record) => {
-        return (
-          <>
-            <EditOutlined
-              onClick={() => {
-                props.onEdit(record);
-              }}
-            />
-            <DeleteOutlined
-              onClick={() => {
-                props.onDelete(record);
-              }}
-              style={{ color: "red", marginLeft: 12 }}
-            />
-          </>
-        );
-      },
-    },
+       {
+         title: "Status",
+         dataIndex: "status",
+         key: "status",
+       },
+       //  {
+       //    title: "Action",
+       //    key: "action",
+       //    dataIndex: "sno",
+       //    render: (_: any, record,onDelete) => (
+       //      <Space size="middle">
+       //        <a>Edit {record.name} </a>
+       //        <a>Delete {onDelete}</a>
+
+       //         {/* <button onClick={onDelete}>Delete</button>  */}
+       //      </Space>
+       //    ),
+       //  },
+       {
+         key: "5",
+         title: "Actions",
+         render: (record) => {
+           return (
+             <>
+               <EditOutlined
+                 onClick={() => {
+                   props.onEdit(record);
+                 }}
+               />
+               <DeleteOutlined
+                 onClick={() => {
+                   props.onDelete(record);
+                 }}
+                 style={{ color: "red", marginLeft: 12 }}
+               />
+             </>
+           );
+         },
+       },
      ];
 
     let myStyle = {
@@ -108,7 +173,7 @@ export const Todos = (props) => {
       //       }
       // </div>
       <>
-        <Table columns={columns} dataSource={props.todos} />;
+        <Table columns={columns} dataSource={props.todos} pagination={{pageSize:5}}/>;
       </>
     );
 }

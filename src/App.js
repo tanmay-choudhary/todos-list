@@ -5,6 +5,7 @@ import { Footer } from "./MyComponents/Footer";
 import { AddTodo } from "./MyComponents/AddTodo.tsx";
 import { About } from "./MyComponents/About";
 import React, { useState, useEffect } from 'react';
+import { Modal } from "antd";
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,62 +26,23 @@ function App() {
     },
   ];
   if (localStorage.getItem("todos") === null) {
-    initTodo = [
-      {
-        sno: "111",
-        title: "title",
-        desc: "desc",
-        tags: ["tags"],
-        status: "status",
-        date: "date",
-        date2: "date2",
-      },
-      {
-        sno: "113",
-        title: "title",
-        desc: "desc",
-        tags: ["tags"],
-        status: "status",
-        date: "date",
-        date2: "date2",
-      },
-      {
-        sno: "114",
-        title: "title",
-        desc: "desc",
-        tags: ["tags"],
-        status: "status",
-        date: "date",
-        date2: "date2",
-      },
-      {
-        sno: "115",
-        title: "title",
-        desc: "desc",
-        tags: ["tags"],
-        status: "status",
-        date: "date",
-        date2: "date2",
-      },
-      {
-        sno: "116",
-        title: "title",
-        desc: "desc",
-        tags: ["tags"],
-        status: "status",
-        date: "date",
-        date2: "date2",
-      },
-    ];
+    initTodo = [ ];
   }
   else {
     initTodo = JSON.parse(localStorage.getItem("todos"));
-    initTodo = [...initTodo,...testData];
+   /// initTodo = [...initTodo,...testData];
   }
-
-  const onEdit = () =>{
-    
+  const [todos, setTodos] = useState(initTodo);
+  const [isEdit, setIsEditing] = useState(false);
+  const [editing, setEditing] = useState({});
+  const onEdit = (record) =>{
+    setIsEditing(true);
+    setEditing(record);
   }
+  const resetEditing = () => {
+    setIsEditing(false);
+    setEditing({});
+  };
   const onDelete = (todo) => {
     console.log("I am ondelete of todo", todo);
     // Deleting this way in react does not work
@@ -93,7 +55,29 @@ function App() {
     console.log("deleted", todos)
     localStorage.setItem("todos", JSON.stringify(todos));
   }
-
+  const editTodo = (sno,title, desc, tags, status, date, date2) => {
+    console.log(
+      "I am Editing this todo",
+    );
+     const myTodo = {
+       sno: sno,
+       title: title,
+       desc: desc,
+       tags: tags,
+       status: status,
+       date: date,
+       date2: date2,
+     };
+    let temp = todos;
+    for(let i=0;i<todos.length;i++){
+      if(todos[i].sno==myTodo.sno){
+        myTodo.date2 = todos[i].date2;
+        temp[i] = myTodo;
+      }
+    }
+    setTodos(temp);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  };
   const addTodo = (title, desc, tags, status, date, date2) => {
     console.log(
       "I am adding this todo",
@@ -122,8 +106,6 @@ function App() {
     setTodos([...todos, myTodo]);
     console.log(myTodo);
   };
-
-  const [todos, setTodos] = useState(initTodo);
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos])
@@ -131,7 +113,7 @@ function App() {
   return (
     <>
       <Router>
-        <Header title="My Todos List" searchBar={false} />
+        {/* <Header title="My Todos List" searchBar={false} /> */}
         {/* <AddTodo addTodo={addTodo} />
       <Todos todos={todos} onDelete={onDelete} />  */}
         <Routes>
@@ -141,6 +123,30 @@ function App() {
               <>
                 <AddTodo addTodo={addTodo} />
                 <Todos todos={todos} onDelete={onDelete} onEdit={onEdit} />
+                <Modal
+                  title="Edit Todo"
+                  visible={isEdit}
+                  okText="Save"
+                  onCancel={() => {
+                    resetEditing();
+                  }}
+                  okText="Done"
+                  onOk={() => {
+                    // setTodos((pre) => {
+                    //   return pre.map((todo) => {
+                    //     if (todo.id === editing.id) {
+                    //       return editing;
+                    //     } else {
+                    //       return todo;
+                    //     }
+                    //   });
+                    // });
+                    setTodos(todos);
+                    resetEditing();
+                  }}
+                >
+                  <AddTodo addTodo={addTodo} editTodo={editTodo} editing={editing} isEdit={isEdit} />
+                </Modal>
               </>
             }
           />
