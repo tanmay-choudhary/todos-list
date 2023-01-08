@@ -17,7 +17,7 @@ export const AddTodo = (props) => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
 
-  const submit = (e) => {
+  const submit = (e : any) => {
     //console.log("I am in submit  = ", title, desc, tags ,status , date);
     e.preventDefault();
     let currDate = new Date().toString();
@@ -27,14 +27,16 @@ export const AddTodo = (props) => {
     }else if(title.length>100 || desc.length>100){
       alert("Title or Description length should be less then 100");
      }
-    //else if(currDate>date){
-    //   console.log(currDay,date);
-    //    alert("Enter Correct Deadline");
-    // } 
      else {
       if (!props.isEdit) {
         console.log("inside Addd");
         props.addTodo(title, desc, tags, status, date, currDate);
+        setTitle("");
+        setDesc("");
+        setDate("");
+        setStatus("");
+        setTag("");
+        setTags([]);
       } else {
         console.log("inside Edittt");
         props.editTodo(
@@ -47,12 +49,7 @@ export const AddTodo = (props) => {
           currDate
         );
       }
-      setTitle("");
-      setDesc("");
-      setDate("");
-      setStatus("");
-      setTag("");
-      setTags([]);
+      
     }
     // return false;
   };
@@ -75,79 +72,28 @@ export const AddTodo = (props) => {
   return (
     <div className="container my-3">
       {props.isEdit ? <h3>Edit a Todo</h3> : <h3>Add a Todo</h3>}
-      {/* <form onSubmit={submit}>
-          <div className="mb-3">
-            <label htmlFor="title" className="form-label">
-              Todo Title
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="form-control"
-              id="title"
-              aria-describedby="emailHelp"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="desc" className="form-label">
-              Todo Description
-            </label>
-            <input
-              type="text"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              className="form-control"
-              id="desc"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="deadline" className="form-label">
-              Deadline
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDesc(e.target.value)}
-              className="form-control"
-              id="desc"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="desc" className="form-label">
-              Todo Description
-            </label>
-            <input
-              type="text"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              className="form-control"
-              id="desc"
-            />
-          </div>
-          <button type="submit" className="btn btn-sm btn-success">
-            Add Todo
-          </button>
-        </form> */}
       <Form>
-        <Form.Item name={"title"} label={"Title"}>
-          <Input
+        <Form.Item label={"Title"}>
+          <input
+            name={"title"}
             value={title}
             //  defaultValue={props.isEdit ? props.editing.title : ""}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={props.isEdit ? props.editing.title : "Enter Title"}
           />
         </Form.Item>
-        <Form.Item name={"desc"} label={"Desc"}>
-          <Input
+        <Form.Item label={"Desc"}>
+          <input
+            name={"desc"}
             value={desc}
             //defaultValue={props.isEdit ? props.editing.desc : ""}
             onChange={(e) => setDesc(e.target.value)}
             placeholder={props.isEdit ? props.editing.desc : "Description"}
           />
         </Form.Item>
-        <Form.Item name={"date"} label={"Deadline"}>
-          <Input
+        <Form.Item label={"Deadline"}>
+          <input
+            name={"date"}
             type="date"
             value={date}
             //defaultValue={props.isEdit ? props.editing.date : "-"}
@@ -182,9 +128,10 @@ export const AddTodo = (props) => {
             onChange={(e) => setStatus(e)}
           />
         </Form.Item>
-        <Form.Item name={"tag"} label={"Tag"}>
-          <Input
+        <Form.Item label={"Tag"}>
+          <input
             // type="text"
+            name={"tag"}
             placeholder="Enter Tag"
             value={tag}
             onChange={(e) => setTag(e.target.value)}

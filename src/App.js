@@ -89,14 +89,21 @@ function App() {
        date: date,
        date2: date2,
      };
-    let temp = todos;
-    for(let i=0;i<todos.length;i++){
-      if(todos[i].sno==myTodo.sno){
-        myTodo.date2 = todos[i].date2;
-        temp[i] = myTodo;
-      }
-    }
-    setTodos(temp);
+    // let temp = todos;
+    // for(let i=0;i<todos.length;i++){
+    //   if(todos[i].sno==myTodo.sno){
+    //     myTodo.date2 = todos[i].date2;
+    //     temp[i] = myTodo;
+    //   }
+    // }
+    // setTodos(temp);
+    setTodos(
+      todos.map((item) => {
+        if (item.sno !== myTodo.sno) {
+          return item;
+        } else return myTodo;
+      })
+    );
     localStorage.setItem("todos", JSON.stringify(todos));
   };
   const addTodo = (title, desc, tags, status, date, date2) => {
