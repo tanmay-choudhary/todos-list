@@ -120,6 +120,15 @@ export const Todos = (props) => {
          title: "Status",
          dataIndex: "status",
          key: "status",
+         filters: [
+           { text: "Open", value: "Open" },
+           { text: "Working", value: "Working" },
+           { text: "Overdue", value: "Overdue" },
+           { text: "Closed", value: "Closed" },
+         ],
+         onFilter:(value,record)=>{
+          return record.status===value;
+         }
        },
        //  {
        //    title: "Action",
@@ -142,13 +151,13 @@ export const Todos = (props) => {
              <>
                <EditOutlined
                  onClick={() => {
-                  console.log(record ," inside Todotsx")
+                   console.log(record, " inside Todotsx");
                    props.onEdit(record);
                  }}
                />
                <DeleteOutlined
                  onClick={() => {
-                  console.log(record, " inside Todotsx delete");
+                   console.log(record, " inside Todotsx delete");
                    props.onDelete(record);
                  }}
                  style={{ color: "red", marginLeft: 12 }}
