@@ -142,11 +142,13 @@ export const Todos = (props) => {
              <>
                <EditOutlined
                  onClick={() => {
+                  console.log(record ," inside Todotsx")
                    props.onEdit(record);
                  }}
                />
                <DeleteOutlined
                  onClick={() => {
+                  console.log(record, " inside Todotsx delete");
                    props.onDelete(record);
                  }}
                  style={{ color: "red", marginLeft: 12 }}

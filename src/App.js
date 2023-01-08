@@ -35,10 +35,18 @@ function App() {
   }
   const [todos, setTodos] = useState(initTodo);
   const [isEdit, setIsEditing] = useState(false);
-  const [editing, setEditing] = useState({});
+  const [editing, setEditing] = useState();
   const onEdit = (record) =>{
+    console.log(record, " Inside onEdit")
     setIsEditing(true);
-    setEditing(record);
+    setEditing(()=>{
+      return record;
+    });
+    setTimeout( () =>{
+      // 
+       console.log( " Inside Timeout");
+    }, 5000);
+    console.log(editing, " Inside onEdit");
   }
   const resetEditing = () => {
     setIsEditing(false);
@@ -153,7 +161,7 @@ function App() {
                 <AddTodo addTodo={addTodo} />
                 <Todos todos={todos} onDelete={onDelete} onEdit={onEdit} />
                 <Modal
-                  title="Edit Todo"
+                  title=""
                   visible={isEdit}
                   okText="Save"
                   onCancel={() => {
