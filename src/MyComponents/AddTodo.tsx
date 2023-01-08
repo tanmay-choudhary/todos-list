@@ -20,14 +20,21 @@ export const AddTodo = (props) => {
   const submit = (e) => {
     //console.log("I am in submit  = ", title, desc, tags ,status , date);
     e.preventDefault();
+    let currDate = new Date().toString();
+   // let currDay = new Date().get.toString();
     if (!title || !desc || !status) {
       alert("Title or Description cannot be blank");
     }else if(title.length>100 || desc.length>100){
       alert("Title or Description length should be less then 100");
-    } else {
+     }
+    //else if(currDate>date){
+    //   console.log(currDay,date);
+    //    alert("Enter Correct Deadline");
+    // } 
+     else {
       if (!props.isEdit) {
         console.log("inside Addd");
-        props.addTodo(title, desc, tags, status, date, new Date().toString());
+        props.addTodo(title, desc, tags, status, date, currDate);
       } else {
         console.log("inside Edittt");
         props.editTodo(
@@ -37,7 +44,7 @@ export const AddTodo = (props) => {
           tags,
           status,
           date,
-          new Date().toString()
+          currDate
         );
       }
       setTitle("");
@@ -139,7 +146,7 @@ export const AddTodo = (props) => {
             placeholder={props.isEdit ? props.editing.desc : "Description"}
           />
         </Form.Item>
-        <Form.Item name={"date"} label={"Date"}>
+        <Form.Item name={"date"} label={"Deadline"}>
           <Input
             type="date"
             value={date}

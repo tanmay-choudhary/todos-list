@@ -5,6 +5,7 @@ import { Footer } from "./MyComponents/Footer";
 import { AddTodo } from "./MyComponents/AddTodo.tsx";
 import { About } from "./MyComponents/About";
 import React, { useState, useEffect } from 'react';
+import Swal from "sweetalert2";
 import { Modal } from "antd";
 import {
   BrowserRouter as Router,
@@ -44,16 +45,36 @@ function App() {
     setEditing({});
   };
   const onDelete = (todo) => {
-    console.log("I am ondelete of todo", todo);
-    // Deleting this way in react does not work
-    // let index = todos.indexOf(todo);
-    // todos.splice(index, 1);
+    Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+    }).then((result) => {
+      if (result.value) {
+       
+        console.log("I am ondelete of todo", todo);
 
-    setTodos(todos.filter((e) => {
-      return e !== todo;
-    }));
-    console.log("deleted", todos)
-    localStorage.setItem("todos", JSON.stringify(todos));
+        setTodos(
+          todos.filter((e) => {
+            return e !== todo;
+          })
+        );
+        console.log("deleted", todos);
+        localStorage.setItem("todos", JSON.stringify(todos));
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: ` data has been deleted.`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+       
+      }
+    });
+  
   }
   const editTodo = (sno,title, desc, tags, status, date, date2) => {
     console.log(
@@ -94,6 +115,7 @@ function App() {
     } else {
       sno = todos[todos.length - 1].sno + 1;
     }
+    tags = [...new Set (tags)];
     const myTodo = {
       sno: sno,
       title: title,
